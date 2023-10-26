@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 
@@ -17,9 +17,6 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-    <!--- Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
 </head>
 
@@ -42,35 +39,21 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Bem Vindo!</h1>
                                     </div>
-                                    <div id="aplicacaoVue">
-                                        <form @submit="submitLogar" class="formulario">
+                                    <div id="appSignIn">
+                                        <form @submit.prevent="logar" class="formulario" action="" method="POST">
                                             <div class="form-group">
-                                                <input type="email" class="form-control form-control-user" id="usuario" name="usuario" aria-describedby="emailHelp" placeholder="Digite o Usuário...">
+                                                <input type="text" class="form-control form-control-user" v-model="user" id="user" name="user" placeholder="Digite o Usuário...">
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" class="form-control form-control-user" id="senha" name="senha" placeholder="Digite a Senha...">
+                                                <input type="password" class="form-control form-control-user" v-model="password" id="password" name="password" placeholder="Digite a Senha...">
                                             </div>
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox small">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                    <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                                </div>
-                                            </div>
-                                            <a href="index.html" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>
+                                            <input type="submit" class="btn btn-primary btn-user btn-block" value="Logar" />
+
                                             <hr>
 
                                         </form>
                                     </div>
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83,6 +66,9 @@
 
     </div>
 
+    <!-- configurações gerais -->
+    <script src="js/config.js?v=<?=time();?>"></script>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -91,7 +77,18 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="js/sb-admin-2.min.js "></script>
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <!-- JS da Tela -->
+    <script src="js/scripts/Login.js?v=<?=time();?>"></script>
+
 
 </body>
 
