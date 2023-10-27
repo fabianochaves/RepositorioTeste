@@ -1,144 +1,234 @@
-<?php
+<!DOCTYPE html>
+<html lang="pt-br">
 
-class Produtos
-{
-    private $conn;
-    public function __construct($conn)
-    {
-        $this->conn = $conn;
-    }
+<head>
 
-    public function buscaDadosProduto($dados)
-    {
-        $id_produto = $dados['id_produto'];
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        if (!isset($this->conn)) {
-            throw new PDOException("Falha na conexão");
-        }
+    <title>Sistema de Vendas - Home</title>
 
-        $query = $this->conn->prepare("
-            SELECT * FROM produtos 
-            INNER JOIN tipos_produtos ON id_tipo_produto = tipo_produto
-            WHERE id_produto = :id_produto
-        ");
-        $query->bindParam(":id_produto", $id_produto);
-        try {
-            $query->execute();
-        } catch (PDOException $e) {
-            throw new PDOException("Erro ao buscar produto: " . $e->getMessage());
-        }
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
 
-        $dadosProduto = $query->fetchAll(PDO::FETCH_ASSOC);
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-        return json_encode($dadosProduto);
-    }
+</head>
 
-    public function listarCategorias()
-    {
-        if (!isset($this->conn)) {
-            throw new PDOException("Falha na conexão");
-        }
+<body id="page-top">
 
-        $query = $this->conn->prepare("SELECT id_tipo_produto, nome_tipo_produto FROM tipos_produtos WHERE status_tipo_produto = 1 ORDER BY nome_tipo_produto");
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+            <?php include("menu.php"); ?>
 
-        try {
-            $query->execute();
-        } catch (PDOException $e) {
-            throw new PDOException("Erro ao listar categorias: " . $e->getMessage());
-        }
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-        $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
+            <!-- Main Content -->
+            <div id="content">
 
-        return $categorias;
-    }
+                <?php include("menu_top.php"); ?>
+                
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
 
-    public function listarProdutos()
-    {
-        if (!isset($this->conn)) {
-            throw new PDOException("Falha na conexão");
-        }
+                    <!-- Content Row -->
+                    <div class="row">
 
-        $query = $this->conn->prepare("SELECT * FROM produtos WHERE status_produto = 1 ORDER BY nome_produto");
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Total de Vendas (Mês)
 
-        try {
-            $query->execute();
-        } catch (PDOException $e) {
-            throw new PDOException("Erro ao listar produtos: " . $e->getMessage());
-        }
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        $produtos = $query->fetchAll(PDO::FETCH_ASSOC);
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Total de Vendas (Últimos 7 dias)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$215,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        return $produtos;
-    }
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Total de Vendas (Hoje)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$215,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    public function cadastrar($dados)
-    {
-        if (!isset($this->conn)) {
-            throw new PDOException("Falha na conexão");
-        }
+                    <!-- Content Row -->
 
-            $colunas = '';
-            $valores = '';
-            $parametros = [];
+                    <div class="row">
 
-            foreach ($dados as $chave => $valor) {
-                if($chave != "classe" && $chave != "funcao"){
-                    if($chave == "preco_venda_produto" || $chave == "preco_custo_produto"){
-                        $valor = str_replace(".","",$valor);
-                        $valor = str_replace(",",".",$valor);
-                    }
-                    $colunas .= $chave . ', ';
-                    $valores .= ':' . $chave . ', ';
-                    $parametros[':' . $chave] = $valor;
-                }
-            
-            }
-            $colunas = rtrim($colunas, ', ');
-            $valores = rtrim($valores, ', ');
+                        <!-- Area Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Vendas Mês a Mês</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="myAreaChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            $parametros_verificacao = [
-                ':nome_produto' => $dados['nome_produto']
-            ];
+                        <!-- Pie Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Top 3 (Vendas por tipo hoje)</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Direct
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> Social
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-info"></i> Referral
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            $busca = $this->conn->prepare("
-                SELECT * FROM produtos
-                WHERE nome_produto = :nome_produto
-            ");
+                </div>
+                <!-- /.container-fluid -->
 
-            foreach ($parametros_verificacao as $chave => &$valor) {
-                $busca->bindParam($chave, $valor);
-            }
-            try {
-                $busca->execute();
-            } catch (PDOException $e) {
-                throw new PDOException("Erro ao Consultar o Produto: " . $e->getMessage());
-            }
+            </div>
+            <!-- End of Main Content -->
 
-            if ($busca->rowCount() > 0) {
-                throw new PDOException("Produto já Cadastrado!");
-            }
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                  
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
-            $query = $this->conn->prepare("
-                    INSERT INTO produtos ($colunas, status_produto) 
-                    VALUES ($valores, 1)");
+        </div>
+        <!-- End of Content Wrapper -->
 
-            foreach ($parametros as $chave => &$valor) {
-                $query->bindParam($chave, $valor);
-            }
+    </div>
+    <!-- End of Page Wrapper -->
 
-            try {
-                $query->execute();
-            } catch (PDOException $e) {
-                throw new PDOException("Erro ao Inserir o Produto: " . $e->getMessage());
-            }
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-            
-            $response = array(
-                "status" => 1,
-                "message" => "Salvo com Sucesso!"
-            );
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            return $response;
-    }
- 
-}
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+
+</body>
+
+</html>
