@@ -1,8 +1,3 @@
-// Call the dataTables jQuery plugin
-$(document).ready(function() {
-    $('#tabela_itens_venda').DataTable();
-});
-
 vm = new Vue({
     el: '#app',
     data: {
@@ -10,24 +5,182 @@ vm = new Vue({
     },
     methods: {
 
-        adicionarItem() {
-            const selectedProduto = $('#produto').val();
-            const quantidade = $('#quantidade').val();
+        finalizarVenda() {
+            Swal.fire({
+                title: 'Finalizar Venda',
+                text: 'Deseja salvar a venda?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.salvarVenda();
+                    return false;
+                }
+            });
+        },
 
-            // Aqui, você pode criar um objeto que representa o novo item
-            const novoItem = {
-                produto: selectedProduto,
-                quantidade: quantidade,
-                // Adicione outros campos conforme necessário
+        salvarVenda() {
+
+            const itensVenda = [];
+            this.itens.forEach((item) => {
+                const id_produto = item.id_produto;
+                const quantidade = item.quantidade;
+                const valor_unitario = item.valor_unitario;
+                const percent_imposto = item.percent_imposto;
+                const valor_imposto = item.valor_imposto;
+                const valor_total_produto = item.valor_total_produto;
+
+                itensVenda.push({
+                    id_produto,
+                    quantidade,
+                    valor_unitario,
+                    percent_imposto,
+                    valor_imposto,
+                    valor_total_produto,
+                });
+            });
+
+            const totalValorVenda = this.calcularTotalVenda();
+            const totalValorImposto = this.calcularTotalImposto();
+
+            const dadosVenda = {
+                itens: itensVenda,
+                totalValorVenda,
+                totalValorImposto,
             };
 
-            // Adicione o novo item à matriz de itens
-            this.itens.push(novoItem);
-            $('#tabela_itens_venda').DataTable().destroy();
+            jQuery.ajax({
+                type: "POST",
+                url: urlBackEnd + "index.php",
+                data: {
+                    classe: "Venda",
+                    funcao: "cadastrar",
+                    itens: itensVenda,
+                    totalValorVenda: totalValorVenda,
+                    totalValorImposto: totalValorImposto,
+                },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire('Venda Salva', 'A venda foi salva com sucesso.', 'success');
+                        vm.itens = [];
+                        vm.calcularTotais();
+                        var finalizarVendaButton = document.querySelector('.btn-finalizar-venda');
+                        if (finalizarVendaButton) {
+                            finalizarVendaButton.remove();
+                        }
+                    } else {
+                        Swal.fire('Erro', 'Houve um erro ao salvar a venda.', 'error');
+                    }
+                },
+                error: function() {
+                    Swal.fire('Erro', 'Houve um erro ao salvar a venda.', 'error');
+                }
+            });
+        },
 
-            // Feche o SweetAlert
+        calcularTotalVenda() {
+            let totalValorVenda = 0;
+            this.itens.forEach((item) => {
+                totalValorVenda += parseFloat(item.valor_total_produto.replace('R$', '').trim().replace('.', '').replace(',', '.'));
+            });
+            return totalValorVenda.toFixed(2);
+        },
+
+        calcularTotalImposto() {
+            let totalValorImposto = 0;
+            this.itens.forEach((item) => {
+                totalValorImposto += parseFloat(item.valor_imposto.replace('R$', '').trim().replace('.', '').replace(',', '.'));
+            });
+            return totalValorImposto.toFixed(2);
+        },
+
+        removerItem(index) {
+            this.itens.splice(index, 1);
+
+            const buttons = document.querySelectorAll('.excluirItem');
+            for (let i = 0; i < buttons.length; i++) {
+                const dataIndex = buttons[i].getAttribute('data-index');
+                if (dataIndex === index.toString()) {
+                    const row = buttons[i].closest('tr');
+                    row.remove();
+                    break;
+                }
+            }
+
+            if (this.itens.length === 0) {
+                const finalizarVendaButton = document.querySelector('.btn-finalizar-venda');
+                if (finalizarVendaButton) {
+                    finalizarVendaButton.remove();
+                }
+            }
+
+            this.calcularTotais();
+        },
+
+        adicionarItem() {
+            const id_produto = $('#produto').val();
+            const nome_produto = $('#produto option:selected').text();
+            const quantidade = $('#quantidade').val();
+            const valor_unitario = $('#valor_unitario').val();
+            const percent_imposto = $('#percent_imposto').val();
+            const valor_imposto = $('#valor_imposto').val();
+            const valor_total_produto = $('#valor_total_produto').val();
+
+            const novoItem = {
+                id_produto: id_produto,
+                nome_produto: nome_produto,
+                quantidade: quantidade,
+                valor_unitario: valor_unitario,
+                percent_imposto: percent_imposto,
+                valor_imposto: valor_imposto,
+                valor_total_produto: valor_total_produto,
+            };
+            this.itens.push(novoItem);
+            this.calcularTotais();
             Swal.close();
-            $('#tabela_itens_venda').DataTable();
+
+            var finalizarVendaButton = document.querySelector('.btn-finalizar-venda');
+            if (!finalizarVendaButton) {
+                finalizarVendaButton = document.createElement('a');
+                finalizarVendaButton.href = '#';
+                finalizarVendaButton.className = 'btn btn-primary btn-icon-split float-right btn-finalizar-venda';
+                finalizarVendaButton.innerHTML = `
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Finalizar Venda</span>
+                `;
+
+                finalizarVendaButton.addEventListener('click', () => {
+                    this.finalizarVenda()
+                });
+
+                var cardHeader = document.querySelector('.container-btn-finalizar');
+                cardHeader.appendChild(finalizarVendaButton);
+            }
+
+        },
+
+        calcularTotais() {
+            let totalValorImposto = 0;
+            let totalValorProduto = 0;
+
+            this.itens.forEach((item) => {
+                const valorImposto = item.valor_imposto.replace('R$', '').trim();
+                const valorTotalProduto = item.valor_total_produto.replace('R$', '').trim();
+
+                totalValorImposto += parseFloat(valorImposto.replace('.', '').replace(',', '.'));
+                totalValorProduto += parseFloat(valorTotalProduto.replace('.', '').replace(',', '.'));
+            });
+
+            $(".total-valor-venda").empty();
+            $(".total-valor-venda").html('R$ ' + this.formatarNumero(totalValorProduto.toFixed(2)));
+
+            $(".total-valor-imposto").empty();
+            $(".total-valor-imposto").html('R$ ' + this.formatarNumero(totalValorImposto.toFixed(2)));
+
         },
 
         async abrirNovoItem() {
@@ -49,16 +202,26 @@ vm = new Vue({
                                 $('#produto').on('change', function() {
                                     vm.changeProduto($(this).val());
                                 });
-                                $('#quantidade').on('change blur', function() {
+                                $('#quantidade').on('input', function() {
                                     vm.changeProduto($('#produto').val());
                                 });
+
                             },
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                if (result.isConfirmed) {
+                            preConfirm: () => {
+                                const campos = document.querySelectorAll('.campos_novo_item');
+                                let camposVazios = 0;
+
+                                campos.forEach((campo) => {
+                                    if (!campo.value) {
+                                        camposVazios++;
+                                    }
+                                });
+
+                                if (camposVazios > 0) {
+                                    Swal.showValidationMessage('Preencha todos os campos antes de continuar.');
+                                } else {
                                     vm.adicionarItem();
                                 }
-
                             }
                         });
 

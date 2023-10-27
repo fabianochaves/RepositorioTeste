@@ -22,6 +22,19 @@
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/chosen@1.8.7/chosen.min.css" rel="stylesheet">
 
+    <style>
+        .total-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .total-label {
+            font-weight: bold;
+        }
+    </style>
 
 </head>
 
@@ -48,15 +61,36 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">
-                                    <a href="#" class="btn btn-success btn-icon-split" @click="abrirNovoItem">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        <span class="text">Novo Item</span>
-                                    </a>
-                                </h6>
-                            </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="container-btn-novo-item">
+                                            <a href="#" class="btn btn-success btn-icon-split" @click="abrirNovoItem">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-plus"></i>
+                                                </span>
+                                                <span class="text">Novo Item</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h6 class="m-0 font-weight-bold text-primary">
+                                            <span class="total-container">
+                                                <span class="total-label">Total Venda:</span>
+                                                <span class="total-valor-venda">R$ 0,00</span>
+                                            </span>
+                                            <span class="total-container">
+                                                <span class="total-label">Total Imposto:</span>
+                                                <span class="total-valor-imposto">R$ 0,00</span>
+                                            </span>
+                                        </h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <div class="container-btn-finalizar">
+                                            <!-- Conteúdo do container-btn-finalizar -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="tabela_itens_venda" width="100%" cellspacing="0">
@@ -80,24 +114,25 @@
                                                 <th>Totais</th>
                                                 <th></th>
                                                 <th></th>
-                                                <th></th>
-                                                <th></th>
+                                                <th class="total-valor-imposto">R$ 0,00</th>
+                                                <th class="total-valor-venda">R$ 0,00</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             <tr v-for="(item, index) in itens" :key="index">
                                                 <td> 
-                                                    <a href="#" class="btn btn-danger btn-circle">
+                                                    <a href="#" class="btn btn-danger btn-circle excluirItem" @click="removerItem(index)" :data-index="index">
+
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{ item.produto }}</td>
+                                                <td>{{ item.id_produto }}</td>
+                                                <td>{{ item.nome_produto }}</td>
                                                 <td>{{ item.quantidade }}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>R${{ item.valor_unitario }}</td>
+                                                <td>{{ item.percent_imposto }}%</td>
+                                                <td>R${{ item.valor_imposto }}</td>
+                                                <td>R${{ item.valor_total_produto }}</td>
                                             </tr>
 
                                         </tbody>
@@ -110,7 +145,6 @@
                     <!-- /.container-fluid -->
                 </div>
             </div>
-
 
         </div>
         <!-- End of Content Wrapper -->
@@ -131,6 +165,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
     <!-- Inclua o script do Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
 
