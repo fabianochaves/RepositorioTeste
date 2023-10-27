@@ -88,7 +88,7 @@
                                                     <a href="#" class="btn btn-circle alterarStatus" :class="{'btn-danger': tipo.status_tipo_produto === 'Ativo', 'btn-success': tipo.status_tipo_produto === 'Inativo'}" @click="status(tipo)">
                                                         <i :class="{'fas fa-times': tipo.status_tipo_produto === 'Ativo', 'fas fa-check': tipo.status_tipo_produto === 'Inativo'}"></i>
                                                     </a>
-                                                    <a href="#" class="btn btn-primary btn-circle editarRegistro" @click="editar(tipo)">
+                                                    <a href="#" class="btn btn-primary btn-circle editarRegistro" @click="abrirModalEdicao(tipo)">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>

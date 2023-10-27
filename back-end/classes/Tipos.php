@@ -8,6 +8,37 @@ class Tipos
         $this->conn = $conn;
     }
 
+    public function editarTipo($dados){
+        if (!isset($this->conn)) {
+            throw new PDOException("Falha na conexão");
+        }
+
+        $nome_tipo_produto = $dados['novo_nome'];
+        $imposto = $dados['novo_imposto'];
+        $id_tipo_produto = $dados['id_tipo_produto'];
+
+
+        $query = $this->conn->prepare("
+            UPDATE tipos_produtos SET nome_tipo_produto = :nome_tipo_produto, imposto_tipo_produto = :imposto
+            WHERE id_tipo_produto = :id_tipo_produto
+        ");
+    
+        $query->bindParam(":nome_tipo_produto", $nome_tipo_produto);
+        $query->bindParam(":imposto", $imposto);
+        $query->bindParam(":id_tipo_produto", $id_tipo_produto);
+        try {
+            $query->execute();
+            $response = array(
+                "status" => 1,
+                "message" => "Atualizado com Sucesso!"
+            );
+
+            return $response;
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao Atualizar o o Tipo: " . $e->getMessage());
+        }
+    }
+
     public function alterarStatus($dados){
         if (!isset($this->conn)) {
             throw new PDOException("Falha na conexão");
