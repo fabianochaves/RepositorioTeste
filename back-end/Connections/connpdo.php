@@ -1,22 +1,18 @@
 <?php
 $conn = null;
 try {
+    // Dados da conexão PostgreSQL
+    $host = 'dcs-postgres'; // Endereço do servidor PostgreSQL
+    $port = '5432'; // Porta padrão do PostgreSQL
+    $database = 'pdv'; // Nome do banco de dados
+    $db_user = 'pdv'; // Nome de usuário
+    $db_password = '123'; // Senha do usuário
 
-    // dados da conexao:
-    $host = 'mysql';
-    $port = '3306';
-    $database = 'pdv';
-    $db_user = 'pdv';
-    $db_password = '123';
+    // Instancia a classe PDO para a conexão ao PostgreSQL com as opções
+    $conn = new PDO("pgsql:host=$host;port=$port;dbname=$database;user=$db_user;password=$db_password");
 
-    $opcoes = array(
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-    );
-
-    // instancia a classe
-    $conn = new PDO('mysql:host=' . $host . ';port=' . $port . ';dbname=' . $database, $db_user, $db_password, $opcoes);
-    $conn->exec("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
+    // Configuração das opções após a conexão ser estabelecida
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {
     echo 'Não foi possível se conectar (Aplicação): ' . $e->getMessage();

@@ -126,8 +126,8 @@
    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/scripts/Produtos.js"></script>
+    <script src="js/config.js?t=<?php echo time(); ?>"></script>
+    <script src="js/scripts/Produtos.js?t=<?php echo time(); ?>"></script>
 
 </body>
 

@@ -15,10 +15,10 @@ class Dashboard
         }
 
         $query = $this->conn->prepare("
-            SELECT MONTH(datetime_venda) as mes, SUM(valor_total_venda) as total
+            SELECT EXTRACT(MONTH FROM datetime_venda) as mes, SUM(valor_total_venda) as total
             FROM vendas
-            WHERE YEAR(datetime_venda) = YEAR(NOW())
-            GROUP BY mes
+            WHERE EXTRACT(YEAR FROM datetime_venda) = EXTRACT(YEAR FROM NOW())
+            GROUP BY mes;
         ");
 
         try {
@@ -39,7 +39,11 @@ class Dashboard
             throw new PDOException("Falha na conexão");
         }
 
-        $query = $this->conn->prepare("SELECT SUM(valor_total_venda) as total FROM vendas WHERE MONTH(datetime_venda) = MONTH(NOW())");
+        $query = $this->conn->prepare("
+            SELECT SUM(valor_total_venda) as total 
+            FROM vendas 
+            WHERE EXTRACT(MONTH FROM datetime_venda) = EXTRACT(MONTH FROM NOW());
+        ");
         try {
             $query->execute();
         } catch (PDOException $e) {
@@ -62,7 +66,11 @@ class Dashboard
             throw new PDOException("Falha na conexão");
         }
 
-        $query = $this->conn->prepare("SELECT SUM(valor_total_venda) as total FROM vendas WHERE datetime_venda >= DATE_SUB(NOW(), INTERVAL 7 DAY)");
+        $query = $this->conn->prepare("
+            SELECT SUM(valor_total_venda) as total
+            FROM vendas
+            WHERE datetime_venda >= NOW() - INTERVAL '7 days'        
+        ");
         try {
             $query->execute();
         } catch (PDOException $e) {
@@ -85,7 +93,11 @@ class Dashboard
             throw new PDOException("Falha na conexão");
         }
 
-        $query = $this->conn->prepare("SELECT SUM(valor_total_venda) as total FROM vendas WHERE DATE(datetime_venda) = CURDATE()");
+        $query = $this->conn->prepare("
+            SELECT SUM(valor_total_venda) as total
+            FROM vendas
+            WHERE DATE(datetime_venda) = CURRENT_DATE;
+        ");
         try {
             $query->execute();
         } catch (PDOException $e) {

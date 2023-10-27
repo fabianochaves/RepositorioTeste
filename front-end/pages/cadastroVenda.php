@@ -171,8 +171,8 @@
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <script src="js/config.js"></script>
-    <script src="js/scripts/Venda.js"></script>
+    <script src="js/config.js?t=<?php echo time(); ?>"></script>
+    <script src="js/scripts/Venda.js?t=<?php echo time(); ?>"></script>
 
 </body>
 

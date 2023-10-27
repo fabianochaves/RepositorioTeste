@@ -166,8 +166,8 @@
     <script src="js/demo/chart-pie-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
 
-    <script src="js/config.js"></script>
-    <script src="js/scripts/Dashboard.js"></script>
+    <script src="js/config.js?t=<?php echo time(); ?>"></script>
+    <script src="js/scripts/Dashboard.js?t=<?php echo time(); ?>"></script>
 
 </body>
 

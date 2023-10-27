@@ -27,10 +27,10 @@ vm = new Vue({
             this.itens.forEach((item) => {
                 const id_produto = item.id_produto;
                 const quantidade = item.quantidade;
-                const valor_unitario = item.valor_unitario;
-                const percent_imposto = item.percent_imposto;
-                const valor_imposto = item.valor_imposto;
-                const valor_total_produto = item.valor_total_produto;
+                const valor_unitario = item.valor_unitario.replaceAll(".", "").replaceAll(",", ".");
+                const percent_imposto = item.percent_imposto.replaceAll(".", "").replaceAll(",", ".");
+                const valor_imposto = item.valor_imposto.replaceAll(".", "").replaceAll(",", ".");
+                const valor_total_produto = item.valor_total_produto.replaceAll(".", "").replaceAll(",", ".");
 
                 itensVenda.push({
                     id_produto,
