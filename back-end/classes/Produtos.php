@@ -98,7 +98,11 @@ class Produtos
             $where = "";
         }
 
-        $query = $this->conn->prepare("SELECT * FROM produtos $where ORDER BY nome_produto");
+        $query = $this->conn->prepare("
+            SELECT * FROM produtos
+            INNER JOIN tipos_produtos ON id_tipo_produto = tipo_produto
+            $where ORDER BY nome_produto
+        ");
 
         try {
             $query->execute();

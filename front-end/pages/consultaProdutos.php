@@ -97,9 +97,9 @@
                                                 <td>{{ produto.id_produto }}</td>
                                                 <td :class="produto.status_css">{{ produto.status_produto }}</td>
                                                 <td>{{ produto.nome_produto }}</td>
-                                                <td>{{ produto.tipo_produto }}</td>
-                                                <td>{{ produto.preco_venda_produto }}</td>
-                                                <td>{{ produto.preco_custo_produto }}</td>
+                                                <td>{{ produto.nome_tipo_produto }}</td>
+                                                <td>{{ formatarNumero(produto.preco_venda_produto) }}</td>
+                                                <td>{{ formatarNumero(produto.preco_custo_produto) }}</td>
                                             </tr>
                                             <tr v-if="loading">
                                                 <td colspan="5" class="text-center">Carregando...</td>

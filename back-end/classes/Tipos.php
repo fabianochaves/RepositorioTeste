@@ -14,7 +14,7 @@ class Tipos
         }
 
         $nome_tipo_produto = $dados['novo_nome'];
-        $imposto = $dados['novo_imposto'];
+        $imposto = str_replace(',', '.', $dados['novo_imposto']);
         $id_tipo_produto = $dados['id_tipo_produto'];
 
 

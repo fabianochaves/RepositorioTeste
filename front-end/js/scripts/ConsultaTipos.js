@@ -5,6 +5,15 @@ vm = new Vue({
         loading: false
     },
     methods: {
+
+        formatarNumero(numero) {
+            const formatter = new Intl.NumberFormat('pt-BR', {
+                style: 'decimal',
+                minimumFractionDigits: 2,
+            });
+            return formatter.format(numero);
+        },
+
         abrirModalEdicao(tipo) {
             Swal.fire({
                 title: 'Editar Tipo de Produto',
@@ -15,7 +24,7 @@ vm = new Vue({
                         <input id="nome" class="swal2-input" value="${tipo.nome_tipo_produto}" placeholder="Nome do Tipo">
                         <br>
                         <label for="imposto" style="margin-bottom: -20px;">Imposto:</label>
-                        <input id="imposto" class="swal2-input percentual" value="${tipo.imposto_tipo_produto}" placeholder="Imposto">
+                        <input id="imposto" class="swal2-input percentual" value="${vm.formatarNumero(tipo.imposto_tipo_produto)}" placeholder="Imposto">
                     </div>
                     <input type="hidden" id="id_tipo_produto" value="${tipo.id_tipo_produto}">
                 </div>
@@ -42,7 +51,7 @@ vm = new Vue({
                             valor = 100;
                         }
 
-                        $(this).maskMoney({ allowZero: true }).maskMoney('mask', valor);
+                        $(this).maskMoney({ allowZero: true, decimal: ',', precision: 2 }).maskMoney('mask', valor);
                     });
                 },
                 preConfirm: () => {

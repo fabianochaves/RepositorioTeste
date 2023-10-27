@@ -6,57 +6,86 @@ vm = new Vue({
         tipoOptions: [],
     },
     methods: {
+        formatarNumero(numero) {
+            const formatter = new Intl.NumberFormat('pt-BR', {
+                style: 'decimal',
+                minimumFractionDigits: 2,
+            });
+            return formatter.format(numero);
+        },
         abrirModalEdicao(produto) {
-            Swal.fire({
-                title: 'Editar Produto',
 
-                html: `
-                <div>
-                    <div style="display: flex; flex-direction: column;">
-                        <label for="nome_produto" style="margin-bottom: -20px;">Nome:</label>
-                        <input id="nome_produto" class="swal2-input" value="${produto.nome_produto}" placeholder="Nome do Produto">
-                        <br>
-                        <label for="tipo_produto" style="margin-bottom: -20px;">Tipo:</label>
-                        <select id="tipo_produto" class="swal2-select">
-                            ${tipoOptions}
-                        </select>
-                        <br>
-                        <label for="preco_venda_produto" style="margin-bottom: -20px;">Preço de Venda:</label>
-                        <input id="preco_venda_produto" class="swal2-input valorDecimal" value="${produto.preco_venda_produto}" placeholder="Preço de Venda">
-                        <br>
-                        <label for="preco_custo_produto" style="margin-bottom: -20px;">Preço de Custo:</label>
-                        <input id="preco_custo_produto" class="swal2-input valorDecimal" value="${produto.preco_custo_produto}" placeholder="Preço de Custo">
-                    </div>
-                    <input type="hidden" id="id_produto" value="${produto.id_produto}">
-                </div>
-                `,
+            var classe = "Tipos"
+            var funcao = "listar"
 
-                showCancelButton: true,
-                confirmButtonText: 'Salvar',
-                cancelButtonText: 'Cancelar',
-                didOpen: () => {
+            jQuery.ajax({
+                type: 'POST',
+                url: urlBackEnd + 'index.php',
+                data: { classe: classe, funcao: funcao },
+                success: (tiposProduto) => {
 
-                    $('.valorDecimal').maskMoney({
-                        prefix: '',
-                        suffix: '',
-                        allowZero: true,
-                        decimal: ',',
-                        thousands: '.',
-                        precision: 2
+                    const tipoOptions = tiposProduto
+                        .map((tipo) => {
+
+                            const selected = tipo.id_tipo_produto === produto.tipo_produto ? 'selected' : '';
+                            return `<option value="${tipo.id_tipo_produto}" ${selected}>${tipo.nome_tipo_produto}</option>`;
+                        })
+                        .join('');
+
+
+                    Swal.fire({
+                        title: 'Editar Produto',
+                        html: `
+                            <div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label for="nome_produto" style="margin-bottom: -20px;">Nome:</label>
+                                    <input id="nome_produto" class="swal2-input" value="${produto.nome_produto}" placeholder="Nome do Produto">
+                                    <br>
+                                    <label for="tipo_produto" style="margin-bottom: -20px;">Tipo:</label>
+                                    <select id="tipo_produto" class="swal2-select" style="border: 1px solid #ced4da;">
+                                        ${tipoOptions}
+                                    </select>
+                                    <br>
+                                    <label for="preco_venda_produto" style="margin-bottom: -20px;">Preço de Venda:</label>
+                                    <input id="preco_venda_produto" class="swal2-input valorDecimal" value="${vm.formatarNumero(produto.preco_venda_produto)}" placeholder="Preço de Venda">
+                                    <br>
+                                    <label for="preco_custo_produto" style="margin-bottom: -20px;">Preço de Custo:</label>
+                                    <input id="preco_custo_produto" class="swal2-input valorDecimal" value="${vm.formatarNumero(produto.preco_custo_produto)}" placeholder="Preço de Custo">
+                                </div>
+                                <input type="hidden" id="id_produto" value="${produto.id_produto}">
+                            </div>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Salvar',
+                        cancelButtonText: 'Cancelar',
+                        didOpen: () => {
+                            $('.valorDecimal').maskMoney({
+                                prefix: '',
+                                suffix: '',
+                                allowZero: true,
+                                decimal: ',',
+                                thousands: '.',
+                                precision: 2
+                            });
+                        },
+                        preConfirm: () => {
+                            const nome_produto = Swal.getPopup().querySelector('#nome_produto').value;
+                            const tipo_produto = Swal.getPopup().querySelector('#tipo_produto').value;
+                            const preco_venda_produto = Swal.getPopup().querySelector('#preco_venda_produto').value;
+                            const preco_custo_produto = Swal.getPopup().querySelector('#preco_custo_produto').value;
+                            const id_produto = Swal.getPopup().querySelector('#id_produto').value;
+
+                            this.salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto);
+                        }
                     });
-
                 },
-                preConfirm: () => {
-                    const nome_produto = Swal.getPopup().querySelector('#nome_produto').value;
-                    const tipo_produto = Swal.getPopup().querySelector('#tipo_produto').value;
-                    const preco_venda_produto = Swal.getPopup().querySelector('#preco_venda_produto').value;
-                    const preco_custo_produto = Swal.getPopup().querySelector('#preco_custo_produto').value;
-                    const id_produto = Swal.getPopup().querySelector('#id_produto').value;
-
-                    this.salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto);
-                }
+                error: (error) => {
+                    console.error('Erro ao buscar tipos de produtos: ' + error);
+                    Swal.fire('Erro', 'Ocorreu um erro ao buscar os tipos de produtos.', 'error');
+                },
             });
         },
+
 
         salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto) {
             var classe = "Tipos";

@@ -95,7 +95,7 @@
                                                 <td>{{ tipo.id_tipo_produto }}</td>
                                                 <td :class="tipo.status_css">{{ tipo.status_tipo_produto }}</td>
                                                 <td>{{ tipo.nome_tipo_produto }}</td>
-                                                <td>{{ tipo.imposto_tipo_produto }}</td>
+                                                <td>{{ formatarNumero(tipo.imposto_tipo_produto) }}</td>
                                             </tr>
                                             <tr v-if="loading">
                                                 <td colspan="5" class="text-center">Carregando...</td>
