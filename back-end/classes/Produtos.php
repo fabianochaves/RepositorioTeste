@@ -8,6 +8,36 @@ class Produtos
         $this->conn = $conn;
     }
 
+    public function alterarStatus($dados){
+        if (!isset($this->conn)) {
+            throw new PDOException("Falha na conexão");
+        }
+
+        $novo_status = $dados['novo_status'];
+        $id_produto = $dados['id_produto'];
+
+        $query = $this->conn->prepare("
+            UPDATE produtos SET status_produto = 
+            CASE 
+                WHEN :status_produto = 'Ativo' THEN 1
+                WHEN :status_produto = 'Inativo' THEN 0
+            END
+            WHERE id_produto = :id_produto
+        ");
+    
+        $query->bindParam(":status_produto", $novo_status);
+        $query->bindParam(":id_produto", $id_produto);
+        try {
+            $query->execute();
+            $response = array(
+                "status" => 1,
+                "message" => "Atualizado com Sucesso!"
+            );
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao Atualizar o Status: " . $e->getMessage());
+        }
+    }
+
     public function buscaDadosProduto($dados)
     {
         $id_produto = $dados['id_produto'];
@@ -52,13 +82,23 @@ class Produtos
         return $categorias;
     }
 
-    public function listarProdutos()
+    public function listarProdutos($dados)
     {
         if (!isset($this->conn)) {
             throw new PDOException("Falha na conexão");
         }
 
-        $query = $this->conn->prepare("SELECT * FROM produtos WHERE status_produto = 1 ORDER BY nome_produto");
+        if($dados['is_ativo'] == 1){
+            $where = "WHERE status_produto = 1";
+        }
+        else if($dados['is_ativo'] == 0){
+            $where = "WHERE status_produto = 0";
+        }
+        else{
+            $where = "";
+        }
+
+        $query = $this->conn->prepare("SELECT * FROM produtos $where ORDER BY nome_produto");
 
         try {
             $query->execute();

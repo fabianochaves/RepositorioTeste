@@ -1,61 +1,64 @@
 vm = new Vue({
     el: '#app',
     data: {
-        tiposProdutos: [],
-        loading: false
+        Produtos: [],
+        loading: false,
+        tipoOptions: [],
     },
     methods: {
-        abrirModalEdicao(tipo) {
+        abrirModalEdicao(produto) {
             Swal.fire({
-                title: 'Editar Tipo de Produto',
+                title: 'Editar Produto',
+
                 html: `
                 <div>
                     <div style="display: flex; flex-direction: column;">
-                        <label for="nome" style="margin-bottom: -20px;">Nome do Tipo:</label>
-                        <input id="nome" class="swal2-input" value="${tipo.nome_tipo_produto}" placeholder="Nome do Tipo">
+                        <label for="nome_produto" style="margin-bottom: -20px;">Nome:</label>
+                        <input id="nome_produto" class="swal2-input" value="${produto.nome_produto}" placeholder="Nome do Produto">
                         <br>
-                        <label for="imposto" style="margin-bottom: -20px;">Imposto:</label>
-                        <input id="imposto" class="swal2-input percentual" value="${tipo.imposto_tipo_produto}" placeholder="Imposto">
+                        <label for="tipo_produto" style="margin-bottom: -20px;">Tipo:</label>
+                        <select id="tipo_produto" class="swal2-select">
+                            ${tipoOptions}
+                        </select>
+                        <br>
+                        <label for="preco_venda_produto" style="margin-bottom: -20px;">Preço de Venda:</label>
+                        <input id="preco_venda_produto" class="swal2-input valorDecimal" value="${produto.preco_venda_produto}" placeholder="Preço de Venda">
+                        <br>
+                        <label for="preco_custo_produto" style="margin-bottom: -20px;">Preço de Custo:</label>
+                        <input id="preco_custo_produto" class="swal2-input valorDecimal" value="${produto.preco_custo_produto}" placeholder="Preço de Custo">
                     </div>
-                    <input type="hidden" id="id_tipo_produto" value="${tipo.id_tipo_produto}">
+                    <input type="hidden" id="id_produto" value="${produto.id_produto}">
                 </div>
                 `,
+
                 showCancelButton: true,
                 confirmButtonText: 'Salvar',
                 cancelButtonText: 'Cancelar',
                 didOpen: () => {
 
-                    $('#imposto').maskMoney({
+                    $('.valorDecimal').maskMoney({
                         prefix: '',
                         suffix: '',
                         allowZero: true,
                         decimal: ',',
+                        thousands: '.',
                         precision: 2
                     });
 
-                    $('#imposto').on('blur', function() {
-                        let valor = parseFloat($(this).maskMoney('unmasked')[0]);
-
-                        if (valor < 0) {
-                            valor = 0;
-                        } else if (valor > 100) {
-                            valor = 100;
-                        }
-
-                        $(this).maskMoney({ allowZero: true }).maskMoney('mask', valor);
-                    });
                 },
                 preConfirm: () => {
-                    const novoNome = Swal.getPopup().querySelector('#nome').value;
-                    const novoImposto = Swal.getPopup().querySelector('#imposto').value;
-                    const idTipoProduto = Swal.getPopup().querySelector('#id_tipo_produto').value;
+                    const nome_produto = Swal.getPopup().querySelector('#nome_produto').value;
+                    const tipo_produto = Swal.getPopup().querySelector('#tipo_produto').value;
+                    const preco_venda_produto = Swal.getPopup().querySelector('#preco_venda_produto').value;
+                    const preco_custo_produto = Swal.getPopup().querySelector('#preco_custo_produto').value;
+                    const id_produto = Swal.getPopup().querySelector('#id_produto').value;
 
-                    this.salvarAlteracoes(idTipoProduto, novoNome, novoImposto);
+                    this.salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto);
                 }
             });
         },
 
-        salvarAlteracoes(idTipoProduto, novoNome, novoImposto) {
+        salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto) {
             var classe = "Tipos";
             var funcao = "editarTipo";
 
@@ -80,21 +83,24 @@ vm = new Vue({
             });
         },
         listar() {
-            var classe = "Tipos";
-            var funcao = "listar";
+            var classe = "Produtos";
+            var funcao = "listarProdutos";
+            var parametros = {
+                is_ativo: ""
+            };
 
             jQuery.ajax({
                 type: "POST",
                 url: urlBackEnd + "index.php",
-                data: { classe: classe, funcao: funcao },
+                data: { classe: classe, funcao: funcao, is_ativo: parametros },
                 success: function(data) {
 
-                    data.forEach(function(tipo) {
-                        tipo.status_tipo_produto = tipo.status_tipo_produto === 1 ? "Ativo" : "Inativo";
-                        tipo.status_css = tipo.status_tipo_produto === "Ativo" ? "ativo" : "inativo";
+                    data.forEach(function(produto) {
+                        produto.status_produto = produto.status_produto === 1 ? "Ativo" : "Inativo";
+                        produto.status_css = produto.status_produto === "Ativo" ? "ativo" : "inativo";
                     });
 
-                    vm.tiposProdutos = data;
+                    vm.Produtos = data;
                     setTimeout(() => {
                         $('#dataTable').DataTable();
 
@@ -102,9 +108,9 @@ vm = new Vue({
                 }
             });
         },
-        status(tipo) {
-            let novoStatus = tipo.status_tipo_produto === "Ativo" ? "Inativo" : "Ativo";
-            let acao = tipo.status_tipo_produto === "Ativo" ? "inativar" : "ativar";
+        status(produto) {
+            let novoStatus = produto.status_produto === "Ativo" ? "Inativo" : "Ativo";
+            let acao = produto.status_produto === "Ativo" ? "inativar" : "ativar";
 
             Swal.fire({
                 title: 'Tem certeza?',
@@ -115,19 +121,19 @@ vm = new Vue({
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.processarAlteracaoStatus(tipo, novoStatus);
+                    this.processarAlteracaoStatus(produto, novoStatus);
                 }
             });
         },
-        processarAlteracaoStatus(tipo, novo_status) {
-            const id_tipo_produto = tipo.id_tipo_produto;
-            const classe = "Tipos";
+        processarAlteracaoStatus(produto, novo_status) {
+            const id_produto = produto.id_produto;
+            const classe = "Produtos";
             const funcao = "alterarStatus";
 
             const data = {
                 classe: classe,
                 funcao: funcao,
-                id_tipo_produto: id_tipo_produto,
+                id_produto: id_produto,
                 novo_status: novo_status
             };
 

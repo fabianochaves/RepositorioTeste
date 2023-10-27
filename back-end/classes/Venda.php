@@ -78,8 +78,9 @@ class Venda
             throw new PDOException("Falha na conexão");
         }
     
-        $produtosClass = new Produtos($this->conn); // Crie uma instância da classe Produtos
-        $produtos = $produtosClass->listarProdutos(); // Chama a função listarProdutos da classe Produtos para obter a lista de produtos.
+        $produtosClass = new Produtos($this->conn);
+        $parametros = ['is_ativo' => 1];
+        $produtos = $produtosClass->listarProdutos($parametros); 
        
 
         $form = '<div class="form-row">';

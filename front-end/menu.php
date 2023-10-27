@@ -48,7 +48,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Consultas:</h6>
                 <a class="collapse-item" href="consultaTipos">Tipos de Produto</a>
-                <a class="collapse-item" href="consultaProduto">Produtos</a>
+                <a class="collapse-item" href="consultaProdutos">Produtos</a>
             </div>
         </div>
     </li>
