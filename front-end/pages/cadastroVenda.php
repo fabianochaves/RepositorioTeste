@@ -20,8 +20,6 @@
 
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/chosen@1.8.7/chosen.min.css" rel="stylesheet">
-
     <style>
         .total-container {
             display: flex;
