@@ -62,9 +62,8 @@ class Tipos
             try {
                 $query->execute();
             } catch (PDOException $e) {
-                throw new PDOException("Erro ao Consultar o Tipo de Produto: " . $e->getMessage());
+                throw new PDOException("Erro ao Inserir o Tipo de Produto: " . $e->getMessage());
             }
-
             
             $response = array(
                 "status" => 1,

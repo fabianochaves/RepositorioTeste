@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistema de Vendas - Tipos de Produto</title>
+    <title>Sistema de Vendas - Produtos</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -40,7 +40,7 @@
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Cadastro de Tipos de Produto</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Cadastro de Produtos</h1>
                     </div>
                     <div class="row">
                         <!-- Content Column -->
@@ -57,13 +57,29 @@
                                             <div class="form-group">
                                                 <div class="form-row">
                                                     <div class="col-md-6">
-                                                        <label>Nome do Tipo</label>
-                                                        <input autocomplete="off" type="text" class="form-control" v-model="nome_tipo_produto" id="nome_tipo_produto" name="nome_tipo_produto" placeholder="Digite o Nome do Tipo...">
+                                                        <label>Nome do Produto</label>
+                                                        <input autocomplete="off" required type="text" class="form-control form-control" v-model="nome_produto" id="nome_produto" name="nome_produto" placeholder="Digite o Nome do Produto...">
                                                     </div>
-                                                    
                                                     <div class="col-md-6">
-                                                        <label>Imposto (%)</label>
-                                                        <input autocomplete="off" required type="text" class="form-control percentual" v-model="imposto_tipo_produto" id="imposto_tipo_produto" name="imposto_tipo_produto" placeholder="Digite o Imposto...">
+                                                        <label>Tipo</label>
+                                                        <select class="form-control" v-model="tipo_produto">
+                                                            <option value="" disabled selected>Selecione a categoria</option>
+                                                            <option v-for="categoria in categorias" :value="categoria.id_tipo_produto">{{ categoria.nome_tipo_produto }}</option>
+                                                        </select>
+                                                    </div>
+                                               
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-row">
+                                                    <div class="col-md-6">
+                                                        <label>Preço de Venda Unitário (R$)</label>
+                                                        <input autocomplete="off" required type="text" class="form-control form-control valorDecimal" v-model="preco_venda_produto" id="preco_venda_produto" name="preco_venda_produto" placeholder="Digite o Valor de Venda...">
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label>Preço de Custo Unitário (R$)</label>
+                                                        <input autocomplete="off" required type="text" class="form-control form-control valorDecimal" v-model="preco_custo_produto" id="preco_custo_produto" name="preco_custo_produto" placeholder="Digite o Valor de Custo...">
                                                     </div>
                                                 </div>
                                             </div>
@@ -111,7 +127,7 @@
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="js/config.js"></script>
-    <script src="js/scripts/Tipos.js"></script>
+    <script src="js/scripts/Produtos.js"></script>
 
 </body>
 
