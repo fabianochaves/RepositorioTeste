@@ -66,7 +66,7 @@ vm = new Vue({
 
         salvarAlteracoes(idTipoProduto, novoNome, novoImposto) {
             var classe = "Tipos";
-            var funcao = "editarTipo";
+            var funcao = "editar";
 
 
             jQuery.ajax({

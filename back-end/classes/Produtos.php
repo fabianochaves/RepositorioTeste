@@ -8,6 +8,47 @@ class Produtos
         $this->conn = $conn;
     }
 
+    
+    public function editar($dados){
+        if (!isset($this->conn)) {
+            throw new PDOException("Falha na conexão");
+        }
+
+        $tipo_produto = $dados['tipo_produto'];
+        $nome_produto = $dados['nome_produto'];
+        $preco_venda_produto = $dados['preco_venda_produto'];
+        $preco_custo_produto = $dados['preco_custo_produto'];
+        $id_produto = $dados['id_produto'];
+
+        $query = $this->conn->prepare("
+            UPDATE produtos 
+            SET 
+                nome_produto = :nome_produto, 
+                preco_venda_produto = :preco_venda_produto,
+                preco_custo_produto = :preco_custo_produto,
+                tipo_produto = :tipo_produto
+            WHERE 
+                id_produto = :id_produto
+        ");
+    
+        $query->bindParam(":nome_produto", $nome_produto);
+        $query->bindParam(":preco_venda_produto", $preco_venda_produto);
+        $query->bindParam(":preco_custo_produto", $preco_custo_produto);
+        $query->bindParam(":tipo_produto", $tipo_produto);
+        $query->bindParam(":id_produto", $id_produto);
+        try {
+            $query->execute();
+            $response = array(
+                "status" => 1,
+                "message" => "Atualizado com Sucesso!"
+            );
+
+            return $response;
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao Atualizar o o Tipo: " . $e->getMessage());
+        }
+    }
+
     public function alterarStatus($dados){
         if (!isset($this->conn)) {
             throw new PDOException("Falha na conexão");

@@ -8,6 +8,70 @@ class Venda
         $this->conn = $conn;
     }
 
+    
+    public function verItens($dados)
+    {
+        if (!isset($this->conn)) {
+            throw new PDOException("Falha na conexão");
+        }
+
+        $id_venda = $dados['id_venda'];
+
+        $query = $this->conn->prepare("
+            SELECT * FROM itens_venda
+            INNER JOIN produtos ON id_produto = cod_produto_venda
+            WHERE cod_venda = :id_venda
+        ");
+        $query->bindParam(':id_venda', $id_venda);
+        try {
+            $query->execute();
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao listar itens da venda: " . $e->getMessage());
+        }
+
+        $itens = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        $response = array(
+            "status" => 1,
+            "itens" => $itens
+        );
+
+
+        return $response;
+    }
+
+    public function listar($dados)
+    {
+        if (!isset($this->conn)) {
+            throw new PDOException("Falha na conexão");
+        }
+
+        if($dados['is_ativo'] == 1){
+            $where = "WHERE status_venda = 1";
+        }
+        else if($dados['is_ativo'] == 0){
+            $where = "WHERE status_venda = 0";
+        }
+        else{
+            $where = "";
+        }
+
+        $query = $this->conn->prepare("
+            SELECT * FROM vendas
+            $where ORDER BY datetime_venda DESC
+        ");
+
+        try {
+            $query->execute();
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao listar vendas: " . $e->getMessage());
+        }
+
+        $vendas = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $vendas;
+    }
+
     public function cadastrar($dados){
 
 

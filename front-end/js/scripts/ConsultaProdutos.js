@@ -88,14 +88,24 @@ vm = new Vue({
 
 
         salvarAlteracoes(tipo_produto, nome_produto, preco_venda_produto, preco_custo_produto, id_produto) {
-            var classe = "Tipos";
-            var funcao = "editarTipo";
+            var classe = "Produtos";
+            var funcao = "editar";
 
+            preco_venda_produto = preco_venda_produto.replaceAll(".", "").replaceAll(",", ".");
+            preco_custo_produto = preco_custo_produto.replaceAll(".", "").replaceAll(",", ".");
 
             jQuery.ajax({
                 type: "POST",
                 url: urlBackEnd + "index.php",
-                data: { classe: classe, funcao: funcao, id_tipo_produto: idTipoProduto, novo_nome: novoNome, novo_imposto: novoImposto },
+                data: {
+                    classe: classe,
+                    funcao: funcao,
+                    tipo_produto: tipo_produto,
+                    nome_produto: nome_produto,
+                    preco_venda_produto: preco_venda_produto,
+                    preco_custo_produto: preco_custo_produto,
+                    id_produto: id_produto,
+                },
                 success: function(response) {
 
                     if (response.status === 1) {

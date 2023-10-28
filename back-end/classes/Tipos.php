@@ -8,7 +8,7 @@ class Tipos
         $this->conn = $conn;
     }
 
-    public function editarTipo($dados){
+    public function editar($dados){
         if (!isset($this->conn)) {
             throw new PDOException("Falha na conexão");
         }

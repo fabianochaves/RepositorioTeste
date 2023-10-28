@@ -61,7 +61,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Vendas:</h6>
                 <a class="collapse-item" href="cadastroVenda">Nova Venda</a>
-                <a class="collapse-item" href="relVendas">Consulta de Vendas</a>
+                <a class="collapse-item" href="consultaVendas">Consulta de Vendas</a>
             </div>
         </div>
     </li>
