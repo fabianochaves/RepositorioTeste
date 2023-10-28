@@ -105,8 +105,8 @@ vm = new Vue({
                 success: function(data) {
 
                     data.forEach(function(tipo) {
-                        tipo.status_tipo_produto = tipo.status_tipo_produto === 1 ? "Ativo" : "Inativo";
-                        tipo.status_css = tipo.status_tipo_produto === "Ativo" ? "ativo" : "inativo";
+                        tipo.status_tipo_produto = tipo.status_tipo_produto == 1 ? "Ativo" : "Inativo";
+                        tipo.status_css = tipo.status_tipo_produto == "Ativo" ? "ativo" : "inativo";
                     });
 
                     vm.tiposProdutos = data;

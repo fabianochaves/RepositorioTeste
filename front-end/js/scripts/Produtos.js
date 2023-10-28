@@ -163,8 +163,8 @@ vm = new Vue({
                 success: function(data) {
 
                     data.forEach(function(produto) {
-                        produto.status_produto = produto.status_produto === 1 ? "Ativo" : "Inativo";
-                        produto.status_css = produto.status_produto === "Ativo" ? "ativo" : "inativo";
+                        produto.status_produto = produto.status_produto == 1 ? "Ativo" : "Inativo";
+                        produto.status_css = produto.status_produto == "Ativo" ? "ativo" : "inativo";
                     });
 
                     vm.Produtos = data;
