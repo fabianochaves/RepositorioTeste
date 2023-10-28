@@ -74,6 +74,9 @@ class Produtos
                 "status" => 1,
                 "message" => "Atualizado com Sucesso!"
             );
+
+            return $response;
+            
         } catch (PDOException $e) {
             throw new PDOException("Erro ao Atualizar o Status: " . $e->getMessage());
         }
