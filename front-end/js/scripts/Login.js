@@ -25,7 +25,7 @@ $(document).ready(function() {
                             if (data.status == 1) {
                                 location.href = "home"
                             } else {
-                                alerta("error", "Atenção!", data.body, "");
+                                alerta("error", "Atenção!", data.body, "", 0);
                             }
 
                             return false;
