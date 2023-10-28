@@ -157,7 +157,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
 
     <script src="js/config.js?t=<?php echo time(); ?>"></script>
-    <script src="js/scripts/ConsultaTipos.js?t=<?php echo time(); ?>"></script>
+    <script src="js/scripts/Tipos.js?t=<?php echo time(); ?>"></script>
 
 </body>
 
